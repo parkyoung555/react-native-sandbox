@@ -25,7 +25,13 @@ export const typographyStyles = StyleSheet.create({
   heading1: {
     fontSize: 24,
     fontWeight: '500',
-    lineHeight: 32
+    lineHeight: 32,
+    marginVertical: layout.unit * 2
+  },
+  body1: {
+    fontSize: 16,
+    fontWeight: '400',
+    lineHeight: 24,
   }
 });
 

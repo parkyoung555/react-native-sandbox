@@ -26,7 +26,7 @@ export class GradientBackground extends Component {
             })}
           </LinearGradient>
         </Defs>
-        <Rect x='0' y='0' rx={this.props.borderRadius} ry={this.props.borderRadius} height='100%' width='100%' fill='url(#backgroundGradient)' rotate={90} />
+        <Rect x='0' y='0' rx={this.props.borderRadius} ry={this.props.borderRadius} height='100%' width='100%' fill='url(#backgroundGradient)' rotate={45} />
       </Svg>
     );
   }

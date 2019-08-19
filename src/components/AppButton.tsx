@@ -5,7 +5,7 @@ import {StyleVariantComponent} from '../shared/StyleVariantComponent';
 import {GradientBackground} from './Gradient';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
-export default class Button extends StyleVariantComponent {
+export default class AppButton extends StyleVariantComponent {
   props: {
     label?: string;
     color?: 'primary' | 'accent' | 'warn';
@@ -144,16 +144,14 @@ export default class Button extends StyleVariantComponent {
   render() {
     const Gradient = GradientBackground,
       borderRadius =  this.props.type === 'icon' ? uiDims.iconButton / 2 : (this.props.type === 'fab' ? uiDims.fab / 2 : theme.roundness),
-      iconMarginRight = this.props.type === 'text' && this.props.dir === 'ltr' ? layout.unit : 0,
-      iconMarginLeft = this.props.type === 'text' && this.props.dir === 'rtl' ? layout.unit : 0,
+      iconMarginRight = this.props.type === 'text' && this.props.dir === 'ltr' ? layout.unit : (this.props.type === 'fab' && this.props.label && this.props.dir === 'ltr' ? layout.unit + 4 : 0),
+      iconMarginLeft = this.props.type === 'text' && this.props.dir === 'rtl' ? layout.unit : (this.props.type === 'fab' && this.props.label && this.props.dir === 'rtl' ? layout.unit + 4 : 0),
       iconSize = this.props.type === 'text' ? 18 : 24,
-      labelMarginLeft = this.props.type === 'fab' && this.props.dir === 'ltr' ? layout.unit + 4 : 0,
-      labelMarginRight = this.props.type === 'fab' && this.props.dir === 'rtl' ? layout.unit + 4 : 0,
       label = this.props.type === 'text' ? (this.props.label || 'Button') : (this.props.type === 'fab' && this.props.label ? this.props.label : null);
     const content = <View style={[this.getStyleVariant(this.styles, 'button', this.props.type, this.props.variant), this.props.style]}>
       {this.props.variant === 'gradientFill' ? <Gradient style={StyleSheet.absoluteFill} stops={[ theme.colors.primary, theme.colors.accent ]} borderRadius={borderRadius} /> : null}
       {this.props.iconName ? <Icon style={[this.getStyleVariant(this.styles, 'typography', this.props.type, this.props.variant), { marginLeft: iconMarginLeft, marginRight: iconMarginRight, fontSize: iconSize, fontWeight: 'normal'}]} name={this.props.iconName} /> : null}
-      {this.props.type !== 'icon' && (this.props.type === 'fab' ? this.props.label : true) ? <Text style={[this.getStyleVariant(this.styles, 'typography', this.props.type, this.props.variant), { marginLeft: labelMarginLeft, marginRight: labelMarginRight }]}>{label}</Text> : null}
+      {this.props.type !== 'icon' && (this.props.type === 'fab' ? this.props.label : true) ? <Text style={this.getStyleVariant(this.styles, 'typography', this.props.type, this.props.variant)}>{label}</Text> : null}
     </View>;
     return Platform.select({
       ios: () => <TouchableOpacity onPress={this.props.onPress}>{content}</TouchableOpacity>,
