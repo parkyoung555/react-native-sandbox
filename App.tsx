@@ -2,29 +2,35 @@ import React, {Component} from 'react';
 import {Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
 import {createStackNavigator, createAppContainer, NavigationScreenOptions} from 'react-navigation';
 import Button from "./src/components/Button";
-import {layout} from "./src/styles";
+import {layout, typographyStyles} from "./src/styles";
 
 class HomeScreen extends Component {
   static navigationOptions = {
     title: 'Home'
   };
+  props: {
+    navigation: any;
+  };
 
   render() {
+    const {navigate} = this.props.navigation;
+
     return (
       <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView style={{ margin: layout.unit }}>
-          <Text style={{ margin: layout.unit, fontSize: 24, fontWeight: '500' }}>Themeable buttons</Text>
+        <ScrollView style={{ padding: layout.unit }}>
+          <Text style={[ typographyStyles.heading1, { margin: layout.unit } ]}>Themeable buttons</Text>
           <Button variant='flat' label='Flat button' />
-          <Button variant='raised' label='Raised button' color='accent' />
-          <Button variant='outline' label='Outline button' />
+          <Button variant='outline' color='accent' label='Outline button' />
+          <Button variant='raised' label='Raised button' />
           <Button variant='gradientFill' label='Gradient fill button' />
           <Button variant='gradientFill' label='React native vector icons' iconName='cake' />
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
             <Button type='icon' iconName='favorite' />
-            <Button type='icon' variant='raised' iconName='cake' color='accent' />
-            <Button type='icon' variant='outline' iconName='cake' />
+            <Button type='icon' color='accent' variant='outline' iconName='cake' />
+            <Button type='icon' variant='raised' iconName='cake' />
             <Button type='icon' variant='gradientFill' iconName='star' />
           </View>
+          <Button color='accent' variant='raised' label='Go to profile page' iconName='arrow-forward' dir='rtl' onPress={() => navigate('Profile', { name: 'Young Park' })} />
         </ScrollView>
         <Button type='fab' iconName='favorite' label='FAB with label' style={{ margin: layout.unit * 3, position: 'absolute', bottom: 0, right: 0 }} />
         <Button type='fab' variant='gradientFill' iconName='cake' style={{ margin: layout.unit * 3, position: 'absolute', bottom: 0, left: 0 }} />
@@ -37,11 +43,16 @@ class ProfileScreen extends Component {
   static navigationOptions = {
     title: 'Profile'
   };
+  props: {
+    navigation: any;
+  };
 
   render() {
+    const {navigation} = this.props;
     return (
-      <View>
-        <Text>Profile!</Text>
+      <View style={{ flex: 1, padding: layout.unit }}>
+        <Text style={[ typographyStyles.heading1, { margin: layout.unit } ]}>{navigation.getParam('name')}</Text>
+        <Button label='Go back home' onPress={() => navigation.goBack()} variant='gradientFill' iconName='home' />
       </View>
     );
   }

@@ -15,10 +15,13 @@ export default class Button extends StyleVariantComponent {
     // svgIcon?: any;
     onPress?: () => void;
     style?: any;
+    dir?: 'rtl' | 'ltr'
   };
   static defaultProps = {
     color: 'primary',
-    type: 'text'
+    variant: 'flat',
+    type: 'text',
+    dir: 'ltr'
   };
   styles = {
     buttonText: {
@@ -56,7 +59,8 @@ export default class Button extends StyleVariantComponent {
       height: uiDims.fab,
       justifyContent: 'center',
       margin: layout.unit,
-      minWidth: uiDims.fab
+      minWidth: uiDims.fab,
+      paddingHorizontal: layout.unit * 2
     },
     buttonTextRaised: {
       backgroundColor: '',
@@ -71,7 +75,7 @@ export default class Button extends StyleVariantComponent {
     },
     buttonTextOutline: {
       borderColor: '',
-      borderWidth: 2
+      borderWidth: StyleSheet.hairlineWidth
     },
     // @ts-ignore
     get buttonTextGradientFill() {
@@ -127,9 +131,11 @@ export default class Button extends StyleVariantComponent {
 
   constructor(props: any) {
     super(props);
+    this.styles.buttonText.flexDirection = this.props.dir === 'ltr' ? 'row' : 'row-reverse';
+    this.styles.buttonFab.flexDirection = this.props.dir === 'ltr' ? 'row' : 'row-reverse';
     this.styles.buttonTextRaised.backgroundColor = theme.colors[this.props.color];
     this.styles.buttonFab.backgroundColor = theme.colors[this.props.color];
-    this.styles.buttonTextOutline.borderColor = theme.colors[this.props.color];
+    this.styles.buttonTextOutline.borderColor = theme.colors.divider;
     this.styles.typographyText.color = theme.colors[this.props.color];
     this.styles.typographyTextRaised.color = theme.colors[`${this.props.color}Contrast`];
     this.styles.typographyTextGradientFill.color = theme.colors[`${this.props.color}Contrast`];
@@ -138,19 +144,20 @@ export default class Button extends StyleVariantComponent {
   render() {
     const Gradient = GradientBackground,
       borderRadius =  this.props.type === 'icon' ? uiDims.iconButton / 2 : (this.props.type === 'fab' ? uiDims.fab / 2 : theme.roundness),
-      iconMarginRight = this.props.type === 'text' || (this.props.type === 'fab' && this.props.label) ? layout.unit : 0,
-      iconMarginLeft = this.props.type === 'fab' && this.props.label ? layout.unit * 2 : 0,
+      iconMarginRight = this.props.type === 'text' && this.props.dir === 'ltr' ? layout.unit : 0,
+      iconMarginLeft = this.props.type === 'text' && this.props.dir === 'rtl' ? layout.unit : 0,
       iconSize = this.props.type === 'text' ? 18 : 24,
-      labelMarginRight = this.props.type === 'fab' ? layout.unit * 2 : 0,
+      labelMarginLeft = this.props.type === 'fab' && this.props.dir === 'ltr' ? layout.unit + 4 : 0,
+      labelMarginRight = this.props.type === 'fab' && this.props.dir === 'rtl' ? layout.unit + 4 : 0,
       label = this.props.type === 'text' ? (this.props.label || 'Button') : (this.props.type === 'fab' && this.props.label ? this.props.label : null);
     const content = <View style={[this.getStyleVariant(this.styles, 'button', this.props.type, this.props.variant), this.props.style]}>
       {this.props.variant === 'gradientFill' ? <Gradient style={StyleSheet.absoluteFill} stops={[ theme.colors.primary, theme.colors.accent ]} borderRadius={borderRadius} /> : null}
       {this.props.iconName ? <Icon style={[this.getStyleVariant(this.styles, 'typography', this.props.type, this.props.variant), { marginLeft: iconMarginLeft, marginRight: iconMarginRight, fontSize: iconSize, fontWeight: 'normal'}]} name={this.props.iconName} /> : null}
-      {this.props.type !== 'icon' && (this.props.type === 'fab' ? this.props.label : true) ? <Text style={[this.getStyleVariant(this.styles, 'typography', this.props.type, this.props.variant), { marginRight: labelMarginRight }]}>{label}</Text> : null}
+      {this.props.type !== 'icon' && (this.props.type === 'fab' ? this.props.label : true) ? <Text style={[this.getStyleVariant(this.styles, 'typography', this.props.type, this.props.variant), { marginLeft: labelMarginLeft, marginRight: labelMarginRight }]}>{label}</Text> : null}
     </View>;
     return Platform.select({
-      ios: () => <TouchableOpacity>{content}</TouchableOpacity>,
-      android: () => <TouchableNativeFeedback>{content}</TouchableNativeFeedback>
+      ios: () => <TouchableOpacity onPress={this.props.onPress}>{content}</TouchableOpacity>,
+      android: () => <TouchableNativeFeedback onPress={this.props.onPress}>{content}</TouchableNativeFeedback>
     })()
   }
 }
