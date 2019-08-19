@@ -1,5 +1,5 @@
 import React from 'react';
-import {Platform, Text, TouchableNativeFeedback, TouchableOpacity, View, StyleSheet} from 'react-native';
+import {Animated, Platform, Text, TouchableNativeFeedback, TouchableOpacity, View, StyleSheet} from 'react-native';
 import theme, {layout, uiDims} from '../styles';
 import {StyleVariantComponent} from '../shared/StyleVariantComponent';
 import {GradientBackground} from './Gradient';
@@ -128,6 +128,10 @@ export default class AppButton extends StyleVariantComponent {
       return this.typographyTextGradientFill;
     }
   };
+  state = {
+    fabLabelWidth: new Animated.Value(0)
+  };
+  isFabCollapsed = false;
 
   constructor(props: any) {
     super(props);
@@ -151,11 +155,20 @@ export default class AppButton extends StyleVariantComponent {
     const content = <View style={[this.getStyleVariant(this.styles, 'button', this.props.type, this.props.variant), this.props.style]}>
       {this.props.variant === 'gradientFill' ? <Gradient style={StyleSheet.absoluteFill} stops={[ theme.colors.primary, theme.colors.accent ]} borderRadius={borderRadius} /> : null}
       {this.props.iconName ? <Icon style={[this.getStyleVariant(this.styles, 'typography', this.props.type, this.props.variant), { marginLeft: iconMarginLeft, marginRight: iconMarginRight, fontSize: iconSize, fontWeight: 'normal'}]} name={this.props.iconName} /> : null}
-      {this.props.type !== 'icon' && (this.props.type === 'fab' ? this.props.label : true) ? <Text style={this.getStyleVariant(this.styles, 'typography', this.props.type, this.props.variant)}>{label}</Text> : null}
+      {this.props.type === 'text' ? <Text numberOfLines={1} style={this.getStyleVariant(this.styles, 'typography', this.props.type, this.props.variant)}>{label}</Text> : null}
+      {this.props.type === 'fab' && this.props.label ? <Text numberOfLines={1} onLayout={this.setExpandedWidth.bind(this)} style={this.getStyleVariant(this.styles, 'typography', this.props.type, this.props.variant)}>{label}</Text> : null}
     </View>;
     return Platform.select({
       ios: () => <TouchableOpacity onPress={this.props.onPress}>{content}</TouchableOpacity>,
       android: () => <TouchableNativeFeedback onPress={this.props.onPress}>{content}</TouchableNativeFeedback>
     })()
+  }
+
+  private setExpandedWidth(event) {
+    console.log(event.nativeElement);
+  }
+
+  private toggleFabLabel() {
+
   }
 }
