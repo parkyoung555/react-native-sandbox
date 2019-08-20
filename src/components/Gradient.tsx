@@ -19,9 +19,9 @@ export class GradientBackground extends Component {
         <Defs>
           <LinearGradient id='backgroundGradient' x1='0%' y1='0%' x2='100%' y2='0%'>
             {this.props.stops.map((stop, i) => {
-              const color = typeof stop === 'string' ? stop : stop.color,
-                offset = typeof stop === 'string' ? (i / (this.props.stops.length - 1)) * 100 : stop.offset,
-                stopOpacity = typeof stop === 'string' ? 1 : stop.stopOpacity;
+              const color = typeof stop === 'object' ? stop.color : stop,
+                offset = typeof stop === 'object' ? stop.offset : (i / (this.props.stops.length - 1)) * 100,
+                stopOpacity = typeof stop === 'object' ? stop.stopOpacity : 1;
               return <Stop key={i} offset={`${offset}%`} stopColor={color} stopOpacity={stopOpacity} />
             })}
           </LinearGradient>

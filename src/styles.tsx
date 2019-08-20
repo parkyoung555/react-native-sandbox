@@ -6,6 +6,8 @@ const theme = {
     primaryContrast: '#ffffff',
     accent: '#e91e63',
     accentContrast: '#ffffff',
+    tertiary: '#2979ff',
+    tertiaryContrast: '#ffffff',
     divider: 'rgba(0,0,0,.12)'
   },
   roundness: 8
