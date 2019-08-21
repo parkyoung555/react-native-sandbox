@@ -1,8 +1,14 @@
-import React, {Component} from 'react';
+import React, {Component, RefObject} from 'react';
 import {Button, Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
 import {createStackNavigator, createAppContainer, NavigationScreenOptions} from 'react-navigation';
 import AppButton from "./src/components/AppButton";
 import {layout, typographyStyles} from "./src/styles";
+
+const styles = StyleSheet.create({
+  buttonMargin: {
+    margin: layout.unit
+  }
+});
 
 class HomeScreen extends Component {
   static navigationOptions = {
@@ -11,28 +17,38 @@ class HomeScreen extends Component {
   props: {
     navigation: any;
   };
+  state = {
+    isCollapsed: false
+  };
+
+  toggleFabCollapse() {
+    this.setState((state: any) => ({
+      isCollapsed: !state.isCollapsed
+    }));
+  }
 
   render() {
     const {navigate} = this.props.navigation;
 
     return (
       <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView style={{ padding: layout.unit }}>
+        <ScrollView style={{ padding: layout.unit, flex: 1, height: '100%' }}>
           <Text style={typographyStyles.heading1}>Themeable buttons</Text>
-          <AppButton variant='flat' label='Flat button' />
-          <AppButton variant='outline' color='accent' label='Outline button' />
-          <AppButton variant='raised' label='Raised button' />
-          <AppButton variant='gradientFill' label='Gradient fill button' />
-          <AppButton variant='gradientFill' label='React native vector icons' iconName='cake' />
+          <AppButton style={styles.buttonMargin} variant='flat' label='Flat button' />
+          <AppButton style={styles.buttonMargin} variant='outline' color='accent' label='Outline button' />
+          <AppButton style={styles.buttonMargin} variant='raised' label='Raised button' />
+          <AppButton style={styles.buttonMargin} variant='gradientFill' label='Gradient fill button' />
+          <AppButton style={styles.buttonMargin} variant='gradientFill' label='React native vector icons' iconName='cake' />
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-            <AppButton type='icon' iconName='favorite' />
-            <AppButton type='icon' color='accent' variant='outline' iconName='cake' />
-            <AppButton type='icon' variant='raised' iconName='cake' />
-            <AppButton type='icon' variant='gradientFill' iconName='star' />
+            <AppButton style={styles.buttonMargin} type='icon' iconName='favorite' />
+            <AppButton style={styles.buttonMargin} type='icon' color='accent' variant='outline' iconName='cake' />
+            <AppButton style={styles.buttonMargin} type='icon' variant='raised' iconName='cake' />
+            <AppButton style={styles.buttonMargin} type='icon' variant='gradientFill' iconName='star' />
           </View>
-          <AppButton color='accent' variant='raised' label='Go to profile page' iconName='arrow-forward' dir='rtl' onPress={() => navigate('Profile', { name: 'Young Park' })} />
+          <AppButton style={styles.buttonMargin} color='accent' variant='raised' label='Go to profile page' iconName='arrow-forward' dir='rtl' onPress={() => navigate('Profile', { name: 'Young Park' })} />
+          <AppButton style={styles.buttonMargin} label='Toggle fab with label' variant='outline' onPress={this.toggleFabCollapse.bind(this)} />
         </ScrollView>
-        <AppButton type='fab' iconName='favorite' label='FAB with label' style={{ margin: layout.unit * 3, position: 'absolute', bottom: 0, right: 0 }} />
+        <AppButton type='fab' iconName='favorite' label='FAB with label' style={{ margin: layout.unit * 3, position: 'absolute', bottom: 0, right: 0 }} isFabCollapsed={this.state.isCollapsed} />
         <AppButton type='fab' variant='gradientFill' iconName='cake' style={{ margin: layout.unit * 3, position: 'absolute', bottom: 0, left: 0 }} />
       </SafeAreaView>
     );
