@@ -66,7 +66,7 @@ export default class AppButton extends StyleVariantComponent {
       justifyContent: 'center',
       minWidth: uiDims.fab,
       overflow: 'hidden',
-      paddingHorizontal: layout.unit * 2
+      paddingHorizontal: (layout.unit * 2) + (layout.unit / 2)
     },
     buttonTextRaised: {
       backgroundColor: '',
@@ -157,8 +157,8 @@ export default class AppButton extends StyleVariantComponent {
   render() {
     const Gradient = GradientBackground,
       borderRadius =  this.props.type === 'icon' ? uiDims.iconButton / 2 : (this.props.type === 'fab' ? uiDims.fab / 2 : theme.roundness),
-      iconMarginRight = this.props.type === 'text' && this.props.dir === 'ltr' ? layout.unit : (this.props.type === 'fab' && this.props.label && this.props.dir === 'ltr' ? layout.unit + (layout.unit / 2) : 0),
-      iconMarginLeft = this.props.type === 'text' && this.props.dir === 'rtl' ? layout.unit : (this.props.type === 'fab' && this.props.label && this.props.dir === 'rtl' ? layout.unit + (layout.unit / 2) : 0),
+      iconMarginRight = this.props.type === 'text' && this.props.dir === 'ltr' ? layout.unit : 0,
+      iconMarginLeft = this.props.type === 'text' && this.props.dir === 'rtl' ? layout.unit : 0,
       iconSize = this.props.type === 'text' ? 18 : 24,
       label = this.props.type === 'text' ? (this.props.label || 'Button') : (this.props.type === 'fab' && this.props.label ? this.props.label : null),
       shadowVisible = typeof this.props.shadow === 'boolean' ? this.props.shadow : (buttonsWithShadows.indexOf(this.props.variant) > -1 || buttonsWithShadows.indexOf(this.props.type) > -1);
@@ -166,7 +166,7 @@ export default class AppButton extends StyleVariantComponent {
       {this.props.variant === 'gradientFill' ? <Gradient style={StyleSheet.absoluteFill} stops={[ theme.colors.primary, theme.colors.accent ]} /> : null}
       {this.props.iconName ? <Icon style={[this.getStyleVariant(this.styles, 'typography', this.props.type, this.props.variant), { marginLeft: iconMarginLeft, marginRight: iconMarginRight, fontSize: iconSize, fontWeight: 'normal'}]} name={this.props.iconName} /> : null}
       {this.props.type === 'text' ? <Text numberOfLines={1} style={this.getStyleVariant(this.styles, 'typography', this.props.type, this.props.variant)}>{label}</Text> : null}
-      {this.props.type === 'fab' && this.props.label ? <Animated.Text numberOfLines={1} onLayout={this.setExpandedWidth.bind(this)} style={[this.getStyleVariant(this.styles, 'typography', this.props.type, this.props.variant), { width: this.fabLabelWidthAnim }]}>{label}</Animated.Text> : null}
+      {this.props.type === 'fab' && this.props.label ? <Animated.View style={{ flexDirection: this.props.dir === 'rtl' ? 'row-reverse' : 'row', width: this.fabLabelWidthAnim }} onLayout={this.setExpandedWidth.bind(this)}><View style={{ width: layout.unit + (layout.unit / 2) }} /><Text numberOfLines={1} style={[this.getStyleVariant(this.styles, 'typography', this.props.type, this.props.variant)]}>{label}</Text></Animated.View> : null}
     </View>;
     return <View style={this.props.style}>
       {shadowVisible ? <View style={[StyleSheet.absoluteFill, elevation.z2, { borderRadius: borderRadius }]} /> : null}
